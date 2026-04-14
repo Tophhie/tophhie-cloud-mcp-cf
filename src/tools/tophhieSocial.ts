@@ -9,6 +9,7 @@ export function registerTophhieSocialTools(server: McpServer, apiBaseUrl: string
     server.registerTool(
         "get_pds_repos",
         {
+            title: "List PDS Repositories",
             description: "Returns a list of all PDS repositories currently registered in Tophhie Social.",
             inputSchema: z.object({}),
             annotations: {
@@ -32,6 +33,7 @@ export function registerTophhieSocialTools(server: McpServer, apiBaseUrl: string
     server.registerTool(
         "verify_pds_handle_availability",
         {
+            title: "Verify PDS Handle Availability",
             description: "Checks if a given PDS handle is available for registration in Tophhie Social. Returns 'available' or 'unavailable'.",
             inputSchema: z.object({
                 handle: z.string().min(3).describe("The atproto PDS handle to check, e.g. 'alice.tophhie.social'. This can include the default domain 'tophhie.social' or any custom domain. Do not include the '@' symbol."),
@@ -57,6 +59,7 @@ export function registerTophhieSocialTools(server: McpServer, apiBaseUrl: string
     server.registerTool(
         "get_pds_bsky_heatmap",
         {
+            title: "Get Bluesky Heatmap Data",
             description: "Returns the heatmap data of Bluesky social network posts for a given year. The heatmap data includes the number of posts made on each day of the year, allowing you to visualize posting activity patterns over time.",
             inputSchema: z.object({
                 year: z.number().int().min(2020).max(new Date().getFullYear()).describe("The year for which to retrieve the heatmap data, e.g. 2024."),
@@ -82,6 +85,7 @@ export function registerTophhieSocialTools(server: McpServer, apiBaseUrl: string
     server.registerTool(
         "get_pds_blob_storage_usage",
         {
+            title: "Get PDS Blob Storage Usage",
             description: "Returns the current blob storage usage for Tophhie Social. This includes the total storage used and the number of blobs stored, allowing you to monitor and manage your storage resources effectively.",
             inputSchema: z.object({}),
             annotations: {
@@ -105,6 +109,7 @@ export function registerTophhieSocialTools(server: McpServer, apiBaseUrl: string
     server.registerTool(
         "get_pds_blob_storage_usage_for_did",
         {
+            title: "Get PDS Blob Storage Usage for DID",
             description: "Returns the blob storage usage for Tophhie Social for a specific DID. This includes the total storage used and the number of blobs stored for that DID, allowing you to monitor and manage storage resources on a per-user basis.",
             inputSchema: z.object({
                 did: z.string().describe("The DID for which to retrieve blob storage usage.")

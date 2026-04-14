@@ -9,6 +9,7 @@ export function registerHealthTools(server: McpServer, apiBaseUrl: string): void
     server.registerTool(
         "check_api_health",
         {
+            title: "Check API Health",
             description: "Checks the health status of the Tophhie Cloud API. Returns 'healthy' if the API is operational, or an error message if there are issues.",
             inputSchema: z.object({}),
             annotations: {

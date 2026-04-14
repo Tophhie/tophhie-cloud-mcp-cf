@@ -5,6 +5,7 @@ export function registerDomainHealthTools(server: McpServer, apiBaseUrl: string)
     server.registerTool(
         "check_domain_health", 
         {
+            title: "Check Domain Health",
             description: "Runs a full DNS and mail security health check for a Tophhie Cloud domain. Returns status for MX records, DMARC, SPF, MTA-STS, DKIM Selectors, DNSSEC, and TLS. Each check reports pass/fail/warn/missing with a human-readable detail string.",
             inputSchema: {
                 domain: z.string().min(3).describe("The domain name to check, e.g. 'example.com'. Do not include a protocol or path."),
@@ -35,6 +36,7 @@ export function registerDomainHealthTools(server: McpServer, apiBaseUrl: string)
     server.registerTool(
         "list_domains",
         {
+            title: "List Tophhie Cloud Domains",
             description: "Returns a list of all domains currently registered in Tophhie Cloud.",
             inputSchema: z.object({}),
             annotations: {
