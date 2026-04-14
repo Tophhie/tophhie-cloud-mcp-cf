@@ -34,7 +34,7 @@ export function registerTophhieSocialTools(server: McpServer, apiBaseUrl: string
         {
             description: "Checks if a given PDS handle is available for registration in Tophhie Social. Returns 'available' or 'unavailable'.",
             inputSchema: z.object({
-                handle: z.string().min(3).describe("The PDS handle to check, e.g. 'alice'. Do not include the '@' symbol or domain."),
+                handle: z.string().min(3).describe("The atproto PDS handle to check, e.g. 'alice.tophhie.social'. This can include the default domain 'tophhie.social' or any custom domain. Do not include the '@' symbol."),
             }),
             annotations: {
                 readOnlyHint: true,
