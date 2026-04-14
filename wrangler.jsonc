@@ -10,6 +10,9 @@
 	"observability": {
 		"enabled": true
 	},
+	"assets": {
+		"directory": "./public"
+	},
 	"upload_source_maps": true,
 	"compatibility_flags": [
 		"nodejs_compat"

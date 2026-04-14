@@ -96,7 +96,4 @@ function buildMcpServer(apiBaseUrl: string): McpServer {
   return server;
 }
 
-// -- Favicon ---
-app.get("/favicon.ico", (c) => c.redirect("https://public-blob.tophhie.cloud/logos/favicon.ico", 301));
-
 export default app;
