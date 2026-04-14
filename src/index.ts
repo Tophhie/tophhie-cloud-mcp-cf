@@ -5,6 +5,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { toFetchResponse, toReqRes } from "fetch-to-node";
 import { registerDomainHealthTools } from "./tools/domainHealth";
 import { registerTophhieSocialTools } from "./tools/tophhieSocial";
+import { registerHealthTools } from "./tools/health";
 
 // --- Environment Variables ---
 export interface Env {
@@ -90,6 +91,7 @@ function buildMcpServer(apiBaseUrl: string): McpServer {
  
   registerDomainHealthTools(server, apiBaseUrl);
   registerTophhieSocialTools(server, apiBaseUrl);
+  registerHealthTools(server, apiBaseUrl);
  
   return server;
 }
