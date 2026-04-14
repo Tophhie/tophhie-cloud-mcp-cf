@@ -20,6 +20,11 @@ export function registerDomainHealthTools(server: McpServer, apiBaseUrl: string)
             if (!response.ok) {
                 throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
             }
+            if (response.status === 404) {
+                return {
+                    content: [{ type: "text" as const, text: `Domain '${domain}' is not a Tophhie Cloud domain. You can query 'https://api.tophhie.dev/domains' to get a list of all Tophhie Cloud domains.` }],
+                };
+            }
             const data = await response.json();
             return {
                 content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
