@@ -1,18 +1,95 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp";
+import { toFetchResponse, toReqRes } from "fetch-to-node";
+import { registerDomainHealthTools } from "./tools/domainHealth";
 
-export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		return new Response("Hello World!");
-	},
-} satisfies ExportedHandler<Env>;
+// --- Environment Variables ---
+export interface Env {
+	API_BASE_URL: string;
+};
+
+// -- Initialize Hono App ---
+const app = new Hono<{Bindings: Env}>();
+
+app.use("*", cors());
+
+app.get("/", (c) =>
+	c.json({
+	name: "tophhie-cloud-mcp",
+	description: "Tophhie Cloud MCP Server",
+	mcp_endpoint: "/mcp",
+	version: "1.0.0",
+	})
+);
+
+// --- MCP Endpoint ---
+app.post("/mcp", async (c) => {
+  const { req, res } = toReqRes(c.req.raw);
+ 
+  const server = buildMcpServer(c.env.API_BASE_URL);
+ 
+  const transport = new StreamableHTTPServerTransport({
+    // stateless mode — required for Cloudflare Workers (no persistent memory)
+    sessionIdGenerator: undefined,
+    enableJsonResponse: true,
+  });
+ 
+  try {
+    await server.connect(transport);
+    await transport.handleRequest(req, res, await c.req.json());
+ 
+    res.on("close", () => {
+      transport.close();
+      server.close();
+    });
+ 
+    return toFetchResponse(res);
+  } catch (err) {
+    console.error("[mcp] request error:", err);
+    return c.json({ error: "Internal server error" }, 500);
+  }
+});
+
+// GET /mcp — clients probe this to check server capabilities / session support
+app.get("/mcp", async (c) => {
+  const { req, res } = toReqRes(c.req.raw);
+ 
+  const server = buildMcpServer(c.env.API_BASE_URL);
+ 
+  const transport = new StreamableHTTPServerTransport({
+    sessionIdGenerator: undefined,
+    enableJsonResponse: true,
+  });
+ 
+  try {
+    await server.connect(transport);
+    await transport.handleRequest(req, res);
+ 
+    res.on("close", () => {
+      transport.close();
+      server.close();
+    });
+ 
+    return toFetchResponse(res);
+  } catch (err) {
+    console.error("[mcp] GET error:", err);
+    return c.json({ error: "Internal server error" }, 500);
+  }
+});
+
+// ── MCP server factory ────────────────────────────────────────────────────────
+ 
+function buildMcpServer(apiBaseUrl: string): McpServer {
+  const server = new McpServer({
+    name: "tophhie-cloud-mcp",
+    version: "1.0.0",
+  });
+ 
+  registerDomainHealthTools(server, apiBaseUrl);
+ 
+  return server;
+}
+
+export default app;
