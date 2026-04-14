@@ -30,4 +30,28 @@ export function registerDomainHealthTools(server: McpServer, apiBaseUrl: string)
             };
         }
     );
+
+
+    server.registerTool(
+        "list_domains",
+        {
+            description: "Returns a list of all domains currently registered in Tophhie Cloud.",
+            inputSchema: z.object({}),
+            annotations: {
+                readOnlyHint: true,
+                openWorldHint: true,
+                idempotentHint: true
+            },
+        },
+        async () => {
+            const response = await fetch(`${apiBaseUrl}/domains`);
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
+            }
+            const data = await response.json();
+            return {
+                content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
+            };
+        }
+    )
 }
