@@ -78,4 +78,52 @@ export function registerTophhieSocialTools(server: McpServer, apiBaseUrl: string
             };
         }
     )
+
+    server.registerTool(
+        "get_pds_blob_storage_usage",
+        {
+            description: "Returns the current blob storage usage for Tophhie Social. This includes the total storage used and the number of blobs stored, allowing you to monitor and manage your storage resources effectively.",
+            inputSchema: z.object({}),
+            annotations: {
+                readOnlyHint: true,
+                openWorldHint: true,
+                idempotentHint: true
+            },
+        },
+        async () => {
+            const response = await fetch(`${apiBaseUrl}/pds/blobStorageUsageBytes`);
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
+            }
+            const data = await response.json();
+            return {
+                content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
+            };
+        }
+    )
+
+    server.registerTool(
+        "get_pds_blob_storage_usage_for_did",
+        {
+            description: "Returns the blob storage usage for Tophhie Social for a specific DID. This includes the total storage used and the number of blobs stored for that DID, allowing you to monitor and manage storage resources on a per-user basis.",
+            inputSchema: z.object({
+                did: z.string().describe("The DID for which to retrieve blob storage usage.")
+            }),
+            annotations: {
+                readOnlyHint: true,
+                openWorldHint: true,
+                idempotentHint: true
+            },
+        },
+        async ({ did }) => {
+            const response = await fetch(`${apiBaseUrl}/pds/blobStorageUsageBytes/${encodeURIComponent(did)}`);
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
+            }
+            const data = await response.json();
+            return {
+                content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
+            };
+        }
+    )
 }
