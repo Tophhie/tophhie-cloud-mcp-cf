@@ -16,7 +16,7 @@ export function registerDomainHealthTools(server: McpServer, apiBaseUrl: string)
             },
         },
         async ({ domain }) => {
-            const response = await fetch(`${apiBaseUrl}/domain-health?domain=${encodeURIComponent(domain)}`);
+            const response = await fetch(`${apiBaseUrl}/domains/${encodeURIComponent(domain)}`);
             if (!response.ok) {
                 throw new Error(`API request failed with status ${response.status}: ${response.statusText}`);
             }
