@@ -118,7 +118,7 @@ export function registerTophhieSocialTools(server: McpServer, apiBaseUrl: string
                 readOnlyHint: true,
                 openWorldHint: true,
                 idempotentHint: true
-            },
+            }
         },
         async ({ did }) => {
             const response = await fetch(`${apiBaseUrl}/pds/blobStorageUsageBytes/${encodeURIComponent(did)}`);

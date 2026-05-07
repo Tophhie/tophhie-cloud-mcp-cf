@@ -6,6 +6,7 @@ import { toFetchResponse, toReqRes } from "fetch-to-node";
 import { registerDomainHealthTools } from "./tools/domainHealth";
 import { registerTophhieSocialTools } from "./tools/tophhieSocial";
 import { registerHealthTools } from "./tools/health";
+import { registerPoliciesTools } from "./tools/policies";
 
 // --- Environment Variables ---
 export interface Env {
@@ -92,6 +93,7 @@ function buildMcpServer(apiBaseUrl: string): McpServer {
   registerDomainHealthTools(server, apiBaseUrl);
   registerTophhieSocialTools(server, apiBaseUrl);
   registerHealthTools(server, apiBaseUrl);
+  registerPoliciesTools(server, apiBaseUrl);
  
   return server;
 }
