@@ -3,6 +3,7 @@ import { cors } from "hono/cors";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { toFetchResponse, toReqRes } from "fetch-to-node";
+import { registerDnsLookupTools } from "./tools/dnsLookup";
 import { registerDomainHealthTools } from "./tools/domainHealth";
 import { registerTophhieSocialTools } from "./tools/tophhieSocial";
 import { registerHealthTools } from "./tools/health";
@@ -90,6 +91,7 @@ function buildMcpServer(apiBaseUrl: string): McpServer {
     version: "1.0.0",
   });
  
+  registerDnsLookupTools(server, apiBaseUrl);
   registerDomainHealthTools(server, apiBaseUrl);
   registerTophhieSocialTools(server, apiBaseUrl);
   registerHealthTools(server, apiBaseUrl);
